@@ -1,5 +1,5 @@
-name: Publish Nuget
-description: Publish your VL plugin
+name: PublishVLNuget
+description: Publishes a VL nuget
 
 inputs:
   NUSPEC:
