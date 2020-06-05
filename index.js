@@ -16,7 +16,7 @@ class Action{
         this.use_symbols = core.getInput('USE_SYMBOLS')
     }
 
-    run(cmd){
+    runCmd(cmd){
         console.log(`Now running ${cmd}`)
         this.exec(cmd, { encoding: "utf-8", stdio: [process.stdin, process.stdout, process.stderr] })
     }
@@ -26,7 +26,7 @@ class Action{
     }
 
     buildSolution(){
-        this.run(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+        this.runCmd(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
     }
 
     downloadIcon(){
@@ -56,19 +56,19 @@ class Action{
                     sem.patch = process.env.GITHUB_RUN_NUMBER
                 }
                 // pack with semver object
-                run(`nuget pack ${nuspec} -Version ${sem.version}`)
+                this.runCmd(`nuget pack ${this.nuspec} -Version ${sem.version}`)
             }
         }else{
             // pack with nuspec version
-            run(`nuget pack ${nuspec}`)
+            this.runCmd(`nuget pack ${nuspec}`)
         }
     }
 
     pushNuget(){
         if(this.use_symbols){
-            run(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed}`)
+            this.runCmdrun(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed}`)
         }else{
-            run(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed} -NoSymbols`)
+            this.runCmd(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed} -NoSymbols`)
         }
     }
 
