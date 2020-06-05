@@ -16,15 +16,15 @@ class Action{
         this.use_symbols = core.getInput('USE_SYMBOLS')
     }
 
-    execute(cmd){
-        executeCommand(cmd, {encoding: "utf-8", stdio: [process.stdin, process.stdout, process.stderr ]})
-    }
-
     executeCommand(cmd, options){
         console.log(`==> Executing ${cmd}`)
     
         const INPUT = cmd.split(" "), TOOL = INPUT[0], ARGS = INPUT.slice(1)
         return spawnSync(TOOL, ARGS, options)
+    }
+
+    execute(cmd){
+        this.executeCommand(cmd, {encoding: "utf-8", stdio: [process.stdin, process.stdout, process.stderr ]})
     }
 
     buildSolution(){
@@ -52,11 +52,11 @@ class Action{
                     sem.patch = process.env.GITHUB_RUN_NUMBER
                 }
                 // pack with semver object
-                this.runCmd(`nuget pack ${this.nuspec} -Version ${sem.version}`)
+                this.execute(`nuget pack ${this.nuspec} -Version ${sem.version}`)
             }
         }else{
             // pack with nuspec version
-            this.runCmd(`nuget pack ${this.nuspec}`)
+            this.execute(`nuget pack ${this.nuspec}`)
         }
     }
 
@@ -68,7 +68,7 @@ class Action{
             this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
         }
         */
-       this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
+       this.execute(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
     }
 
     run(){
