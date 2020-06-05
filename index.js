@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const download = require('download')
 const semver = require('semver')
-const spawn = require('child_process').spawnSync
+const exec = require('child_process').exec
 
 class Action{
     constructor(){
@@ -16,17 +16,19 @@ class Action{
         this.use_symbols = core.getInput('USE_SYMBOLS')
     }
 
-    runCmd(cmd){
+    runCmd(cmd, callback){
         console.log(`Now running ${cmd}`)
-        this.exec(cmd, { encoding: "utf-8", stdio: [process.stdin, process.stdout, process.stderr] })
-    }
+        exec(cmd, function(error, stdout, stderr) {callback(stdout); });
+    };
 
     exec(cmd, options){
         return spawn(cmd, options);
     }
 
     buildSolution(){
-        this.runCmd(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+        this.runCmd(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`, function(out){
+            console.log(out);
+        })
     }
 
     downloadIcon(){
