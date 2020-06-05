@@ -1,8 +1,7 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
-const exec = require('@actions/exec');
 const download = require('download-file')
 const semver = require('semver')
+const run = require('child_process').spawnSync
 
 try
 {
@@ -18,7 +17,7 @@ try
 
     // msbuild
     if(solution){
-        await exec.exec(`msbuild ${solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+        run(`msbuild ${solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
     }
 
     // icon
@@ -52,18 +51,18 @@ try
                 sem.patch = process.env.GITHUB_RUN_NUMBER
             }
             // pack with semver object
-            await exec.exec(`nuget pack ${nuspec} -Version ${sem.version}`)
+            run(`nuget pack ${nuspec} -Version ${sem.version}`)
         }
     }else{
         // pack with nuspec version
-        await exec.exec(`nuget pack ${nuspec}`)
+        run(`nuget pack ${nuspec}`)
     }
 
     // push der nuget
     if(use_symbols){
-        await exec.exec(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed}`)
+        run(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed}`)
     }else{
-        await exec.exec(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed} -NoSymbols`)
+        run(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed} -NoSymbols`)
     }
     
 }
