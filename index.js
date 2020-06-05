@@ -46,7 +46,7 @@ class Action{
 
     packNuget(){
         if(this.version){
-            sem = semver.parse(version)
+            sem = semver.parse(this.version)
             if(sem == null){
                 core.error('The version you provided cannot be parsed to semver, please advise')
                 core.setFailed('Please provide a valid semver version')
