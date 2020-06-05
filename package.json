@@ -1,0 +1,20 @@
+{
+  "name": "PublishNuget",
+  "version": "1.0.0",
+  "description": "A Github Action to publish VL packages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vvvv/PublishNuget.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vvvv/PublishNuget/issues"
+  },
+  "homepage": "https://github.com/vvvv/PublishNuget#readme"
+}
