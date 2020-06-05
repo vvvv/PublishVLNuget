@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const download = require('download')
 const semver = require('semver')
-const exec = require('child_process').exec
+const spawnSync = require('child_process').spawnSync
 
 class Action{
     constructor(){
@@ -16,19 +16,19 @@ class Action{
         this.use_symbols = core.getInput('USE_SYMBOLS')
     }
 
-    runCmd(cmd, callback){
-        console.log(`Now running ${cmd}`)
-        exec(cmd, function(error, stdout, stderr) {callback(stdout); });
-    };
+    execute(cmd){
+        executeCommand(cmd, {encoding: "utf-8", stdio: [process.stdin, process.stdout, process.stderr ]})
+    }
 
-    exec(cmd, options){
-        return spawn(cmd, options);
+    executeCommand(cmd, options){
+        console.log(`==> Executing ${cmd}`)
+    
+        const INPUT = cmd.split(" "), TOOL = INPUT[0], ARGS = INPUT.slice(1)
+        return spawnSync(TOOL, ARGS, options)
     }
 
     buildSolution(){
-        this.runCmd(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`, function(out){
-            console.log(out);
-        })
+        this.execute(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
     }
 
     downloadIcon(){
@@ -52,15 +52,11 @@ class Action{
                     sem.patch = process.env.GITHUB_RUN_NUMBER
                 }
                 // pack with semver object
-                this.runCmd(`nuget pack ${this.nuspec} -Version ${sem.version}`, function(out){
-                    console.log(out);
-                })
+                this.runCmd(`nuget pack ${this.nuspec} -Version ${sem.version}`)
             }
         }else{
             // pack with nuspec version
-            this.runCmd(`nuget pack ${this.nuspec}`, function(out){
-                console.log(out);
-            })
+            this.runCmd(`nuget pack ${this.nuspec}`)
         }
     }
 
@@ -72,9 +68,7 @@ class Action{
             this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
         }
         */
-       this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`, function(out){
-           console.log(out);
-       })
+       this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
     }
 
     run(){
