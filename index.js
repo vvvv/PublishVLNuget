@@ -46,7 +46,7 @@ class Action{
 
     packNuget(){
         if(this.version){
-            sem = semver.parse(this.version)
+            var sem = semver.parse(this.version)
             if(sem == null){
                 core.error('The version you provided cannot be parsed to semver, please advise')
                 core.setFailed('Please provide a valid semver version')
@@ -60,15 +60,15 @@ class Action{
             }
         }else{
             // pack with nuspec version
-            this.runCmd(`nuget pack ${nuspec}`)
+            this.runCmd(`nuget pack ${this.nuspec}`)
         }
     }
 
     pushNuget(){
         if(this.use_symbols){
-            this.runCmdrun(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed}`)
+            this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
         }else{
-            this.runCmd(`nuget push *.nupkg ${nuget_key} -src ${nuget_feed} -NoSymbols`)
+            this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
         }
     }
 
