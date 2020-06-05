@@ -2,9 +2,12 @@
 
 A Github Action to publish VL packages
 
-## Usage
+## Disclaimer
+This action is under development, please do not use for now
 
-The following arguments can be used
+## Inputs
+
+The following inputs can be used
 
 | Argument           | Description                                                                                                                                     |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -17,3 +20,9 @@ The following arguments can be used
 | NUGET_KEY          | Optional. Your secret API key to publish your package                                                                                           |
 | NUGET_FEED         | Optional. Sets the nuget feed to publish the nuget. Uses nuget.org's feed by default                                                            |
 | USE_SYMBOLS        | Optional. Allows to explicitly use symbols when packing the nuget. Defaults to `False`.                                                         |
+
+## Outputs
+
+| Argument           | Description                                                                                                                                     |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| VERSION            | The version you've just pushed                                                                                                                  |
