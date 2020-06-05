@@ -52,20 +52,29 @@ class Action{
                     sem.patch = process.env.GITHUB_RUN_NUMBER
                 }
                 // pack with semver object
-                this.runCmd(`nuget pack ${this.nuspec} -Version ${sem.version}`)
+                this.runCmd(`nuget pack ${this.nuspec} -Version ${sem.version}`, function(out){
+                    console.log(out);
+                })
             }
         }else{
             // pack with nuspec version
-            this.runCmd(`nuget pack ${this.nuspec}`)
+            this.runCmd(`nuget pack ${this.nuspec}`, function(out){
+                console.log(out);
+            })
         }
     }
 
     pushNuget(){
+        /*
         if(this.use_symbols){
             this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
         }else{
             this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
         }
+        */
+       this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`, function(out){
+           console.log(out);
+       })
     }
 
     run(){
