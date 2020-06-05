@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/vvvv/PublishNuget/issues"
   },
-  "homepage": "https://github.com/vvvv/PublishNuget#readme"
+  "homepage": "https://github.com/vvvv/PublishNuget#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^3.0.0"
+  }
 }
