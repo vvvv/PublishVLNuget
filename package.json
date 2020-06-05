@@ -21,7 +21,7 @@
     "@actions/core": "^1.2.4",
     "@actions/exec": "^1.0.4",
     "@actions/github": "^3.0.0",
-    "download-file": "^0.1.5",
+    "download": "^8.0.0",
     "semver": "^7.3.2"
   }
 }

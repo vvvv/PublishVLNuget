@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const download = require('download-file')
+const download = require('download')
 const semver = require('semver')
 const spawn = require('child_process').spawnSync
 
@@ -34,13 +34,7 @@ class Action{
             core.error('You provided an icon source but no destination, won\'t be able to pack your nuget!')
             core.setFailed('Please provide a destination for your icon')
         }else{
-            var options = {
-                directory: this.icon_dst
-            }
-            download(this.icon_src, options, function(err){
-                if (err) throw err
-                core.setFailed('Cannot download the icon')
-            })
+            download(this.icon_src, this.icon_dst)
         }
     }
 
