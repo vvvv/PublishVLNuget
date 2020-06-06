@@ -72,7 +72,7 @@ class Action{
                 core.error('The version you provided cannot be parsed to semver, please advise')
                 core.setFailed('Please provide a valid semver version')
             }else{
-                if(this.auto_increment_patch == true){
+                if(this.auto_increment_patch == 'true'){
                     core.info('Trying to retrieve Github run number')
                     core.info(process.env.GITHUB_RUN_NUMBER)
                     sem.patch = process.env.GITHUB_RUN_NUMBER
