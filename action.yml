@@ -12,16 +12,16 @@ inputs:
     description: An external URL for your nuget's icon, if the repo does not already have one
     required: false
   ICON_DST:
-    description: If you set an external icon source, this should be the path where your nuspec expects the icon
+    description: If you set an external icon source, this should be the full path to the icon, as expected by your nuspec
     required: false
   VERSION:
-    description: Uses Major.Minor.Patch format
+    description: Your package's version. Must be valid semver. If not set, the version specified in your nuspec will be used
     required: false
   AUTO_PATCH_NUMBER:
     description : If true, automatically increment version patch number at each push. Otherwise, uses the input one
     default: false
   NUGET_KEY:
-    description: 'Nuget API Key'
+    description: Nuget API Key
     required: true
   NUGET_FEED:
     description: Allows to set a custom Nuget feed. If not set, assumes nuget.org default feed
@@ -30,10 +30,7 @@ inputs:
   USE_SYMBOLS:
     description: Allows to explicitely use symbols when packing the nuget.
     required: false
-
-outputs:
-  VERSION:
-    description: The version that's just been pushed
+    default: false
 
 runs:
   using: 'node12'
