@@ -73,7 +73,8 @@ class Action{
                 core.setFailed('Please provide a valid semver version')
             }else{
                 if(this.auto_increment_patch == true){
-                    // user wants to use github run number, let's set our semver object
+                    core.info('Trying to retrieve Github run number')
+                    core.info(process.env.GITHUB_RUN_NUMBER)
                     sem.patch = process.env.GITHUB_RUN_NUMBER
                 }
                 // pack with semver object
