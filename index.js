@@ -1,7 +1,7 @@
 const core = require('@actions/core');
-const download = require('download')
 const semver = require('semver')
 const spawnSync = require('child_process').spawnSync
+const existsSync = require("fs").existsSync
 
 class Action{
     constructor(){
@@ -40,6 +40,10 @@ class Action{
         }
     }
 
+    fileExists(path){
+        return existsSync(path)
+      }
+
     // Builds a vs solution
     buildSolution(){
         var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
@@ -52,7 +56,11 @@ class Action{
             core.error('You provided an icon source but no destination, won\'t be able to pack your nuget!')
             core.setFailed('Please provide a destination for your icon')
         }else{
-            download(this.icon_src, this.icon_dst)
+            var downloadCommand = this.executeCommand(`curl ${this.icon_src} -o ${this.icon_dst} --fail --silent --show-error`)
+            this.printCommandOutput(downloadCommand)
+            if(this.fileExists(this.icon_dst)){
+                console.log("Succesfully retrieved package icon")
+            }
         }
     }
 
