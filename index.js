@@ -16,21 +16,37 @@ class Action{
         this.use_symbols = core.getInput('USE_SYMBOLS')
     }
 
-    executeCommand(cmd, options){
-        console.log(`==> Executing ${cmd}`)
+    // Executes a blocking command
+    executeCommand(command){
+        console.log(`==> Executing ${command}`)
+
+        const INPUT = command.split(" ")
+        const TOOL = INPUT[0], ARGS = INPUT.slice(1)
+        
+        return spawnSync(TOOL, ARGS, { encoding: 'utf-8' })
+    }
+
     
-        const INPUT = cmd.split(" "), TOOL = INPUT[0], ARGS = INPUT.slice(1)
-        return spawnSync(TOOL, ARGS, options)
+    // Takes the result of a command, prints its stdout/stderr and fails the job if any stderr
+    printCommandOutput(command){
+        if(command.stdout){
+            console.log('OK')
+            console.log(command.stdout)
+        }
+        
+          if(command.stderr){
+            console.log('FAILURE')
+            core.setFailed(command.stderr)
+        }
     }
 
-    execute(cmd){
-        this.executeCommand(cmd, {encoding: "utf-8", stdio: [process.stdin, process.stdout, process.stderr ]})
-    }
-
+    // Builds a vs solution
     buildSolution(){
-        this.execute(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+        var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+        this.printCommandOutput(buildCommand)
     }
 
+    // Downloads an icon
     downloadIcon(){
         if(!this.icon_dst){
             core.error('You provided an icon source but no destination, won\'t be able to pack your nuget!')
@@ -40,6 +56,7 @@ class Action{
         }
     }
 
+    // Packs the nuget
     packNuget(){
         if(this.version){
             var sem = semver.parse(this.version)
@@ -52,38 +69,41 @@ class Action{
                     sem.patch = process.env.GITHUB_RUN_NUMBER
                 }
                 // pack with semver object
-                this.execute(`nuget pack ${this.nuspec} -Version ${sem.version}`)
+                var packCommand = this.executeCommand(`nuget pack ${this.nuspec} -Version ${sem.version}`)
+                this.printCommandOutput(packCommand)
             }
         }else{
             // pack with nuspec version
-            this.execute(`nuget pack ${this.nuspec}`)
+            var packCommand = this.executeCommand(`nuget pack ${this.nuspec}`)
+            this.printCommandOutput(packCommand)
         }
     }
 
+    // Pushes the nuget
     pushNuget(){
-        /*
         if(this.use_symbols){
-            this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
+            var pushCommand = this.executeCommand(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
+            this.printCommandOutput(pushCommand)
         }else{
-            this.runCmd(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
+            var pushCommand = this.executeCommand(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
+            this.printCommandOutput(pushCommand)
         }
-        */
-       this.execute(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
     }
 
+    // Runs the job
     run(){
         // Build VS solution
         if(this.solution){
             this.buildSolution()
         }else{
-            core.info('Your nuget does not have a VS solution')
+            core.info('Your nuget does not have a VS solution, moving to next step')
         }
 
         // Retrieve icon
         if(this.icon_src){
             this.downloadIcon()
         }else{
-            core.info('Your did not specify any remote icon')
+            core.info('You did not specify any remote icon, moving to next step')
         }
 
         // Pack nuget
