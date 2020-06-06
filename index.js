@@ -71,17 +71,16 @@ class Action{
             if(sem == null){
                 core.error('The version you provided cannot be parsed to semver, please advise')
                 core.setFailed('Please provide a valid semver version')
-            }else{
+            }
+            else{
                 if(this.auto_increment_patch == 'true'){
-                    core.info('Trying to retrieve Github run number')
-                    core.info(process.env.GITHUB_RUN_NUMBER)
-                    sem.patch = process.env.GITHUB_RUN_NUMBER
+                    // increment patch number
                 }
-                // pack with semver object
                 var packCommand = this.executeCommand(`nuget pack ${this.nuspec} -Version ${sem.version}`)
                 this.printCommandOutput(packCommand)
             }
-        }else{
+        }
+        else{
             // pack with nuspec version
             var packCommand = this.executeCommand(`nuget pack ${this.nuspec}`)
             this.printCommandOutput(packCommand)
@@ -90,7 +89,7 @@ class Action{
 
     // Pushes the nuget
     pushNuget(){
-        if(this.use_symbols){
+        if(this.use_symbols == 'true'){
             var pushCommand = this.executeCommand(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
             this.printCommandOutput(pushCommand)
         }else{
