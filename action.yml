@@ -20,14 +20,14 @@ inputs:
   auto-patch-number:
     description : If true, automatically increment version patch number at each push. Otherwise, uses the input one
     default: false
-  nuget_key:
+  nuget-key:
     description: Nuget API Key
     required: true
-  nuget_feed:
+  nuget-feed:
     description: Allows to set a custom Nuget feed. If not set, assumes nuget.org default feed
     required: false
     default: 'https://api.nuget.org/v3/index.json'
-  use_symbols:
+  use-symbols:
     description: Allows to explicitely use symbols when packing the nuget.
     required: false
     default: false
