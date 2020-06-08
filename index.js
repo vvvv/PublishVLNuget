@@ -5,15 +5,15 @@ const existsSync = require("fs").existsSync
 
 class Action{
     constructor(){
-        this.nuspec = core.getInput('NUSPEC', { required: true })
-        this.solution = core.getInput('SOLUTION')
-        this.icon_src = core.getInput('ICON_SRC')
-        this.icon_dst = core.getInput('ICON_DST')
-        this.version = core.getInput('VERSION')
-        this.auto_increment_patch = core.getInput('AUTO_PATCH_NUMBER')
-        this.nuget_key = core.getInput('NUGET_KEY')
-        this.nuget_feed = core.getInput('NUGET_FEED')
-        this.use_symbols = core.getInput('USE_SYMBOLS')
+        this.nuspec = core.getInput('nuspec', { required: true })
+        this.solution = core.getInput('solution')
+        this.icon_src = core.getInput('icon-src')
+        this.icon_dst = core.getInput('icon-dst')
+        this.version = core.getInput('version')
+        this.auto_increment_patch = core.getInput('auto-patch-number')
+        this.nuget_key = core.getInput('nuget-key')
+        this.nuget_feed = core.getInput('nuget-feed')
+        this.use_symbols = core.getInput('use-symbols')
     }
 
     // Executes a blocking command
