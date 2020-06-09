@@ -2,8 +2,6 @@ const core = require('@actions/core');
 const semver = require('semver')
 const spawnSync = require('child_process').spawnSync
 const existsSync = require("fs").existsSync
-const readFileSync = require("fs").readFileSync
-const parseString = require('xml2js').parseString;
 
 class Action{
     constructor(){
@@ -42,13 +40,17 @@ class Action{
         }
     }
 
-    // Builds the vs solution
+    fileExists(path){
+        return existsSync(path)
+      }
+
+    // Builds a vs solution
     buildSolution(){
         var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
         this.printCommandOutput(buildCommand)
     }
 
-    /*
+    // Downloads an icon
     downloadIcon(){
         if(!this.icon_dst){
             core.error('You provided an icon source but no destination, won\'t be able to pack your nuget!')
@@ -56,30 +58,9 @@ class Action{
         }else{
             var downloadCommand = this.executeCommand(`curl ${this.icon_src} -o ${this.icon_dst} --fail --silent --show-error`)
             this.printCommandOutput(downloadCommand)
-            if(existsSync(this.icon_dst)){
-                console.log("Succesfully downloaded package icon")
+            if(this.fileExists(this.icon_dst)){
+                console.log("Succesfully retrieved package icon")
             }
-        }
-    }
-    */
-
-    // Downloads an icon
-    downloadIcon(){
-        var nuspec = readFileSync(this.nuspec)
-        var iconPath
-        parseString(nuspec, function(err, result){
-            iconPath = (String(result.package.metadata[0].icon))
-        })
-        if(iconPath){
-            console.log(`Your icon will be downloaded to ${iconPath}`)
-            var dlCommand = this.executeCommand(`curl ${this.icon_src} -o ${escape(iconPath)} --create-dir --fail --silent --show-error`)
-            this.printCommandOutput(dlCommand)
-            if(existsSync(iconPath)){
-                console.log("OK")
-                console.log("Succesfully downloaded package icon")
-            }
-        }else{
-            core.setFailed('Cannot find an icon path in your nuspec file')
         }
     }
 

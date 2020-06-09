@@ -21,7 +21,6 @@
     "@actions/core": "^1.2.4",
     "@actions/exec": "^1.0.4",
     "@actions/github": "^3.0.0",
-    "semver": "^7.3.2",
-    "xml2js": "^0.4.23"
+    "semver": "^7.3.2"
   }
 }
