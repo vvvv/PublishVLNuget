@@ -87,18 +87,18 @@ class Action{
             core.setFailed('You did not provide a nuspec or a VS solution, I have nothing to pack here...')
         }
 
-        // Build solution
-        if(this.solution){
-            this.buildSolution()
-        }else{
-            core.info('Your nuget does not have a VS solution, moving to next step')
-        }
-
         // Retrieve icon
         if(this.icon_src){
             this.downloadIcon()
         }else{
             core.info('You did not specify any remote icon, moving to next step')
+        }
+
+        // Build solution
+        if(this.solution){
+            this.buildSolution()
+        }else{
+            core.info('Your nuget does not have a VS solution, moving to next step')
         }
 
         // Pack the nuget
