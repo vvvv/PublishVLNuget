@@ -113,11 +113,10 @@ class Action{
         // Push the nuget
         if(this.nuspec){
             // The user specificied a nuspec, which means it was packed at the root of the repo
-            this.pushNuget('*.nuspec')
+            this.pushNuget('*.nupkg')
         }else{
             // msbuild took care of packing, which means the nuspec seats next to the built dll
             var src_path = path.dirname(this.solution)
-            core.info(`Your solution seats in ${src_path}. Trying to push now.`)
             this.pushNuget(`${src_path}\\bin\\Release\\*.nupkg`)
         }
         
