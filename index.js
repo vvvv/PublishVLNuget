@@ -116,7 +116,7 @@ class Action{
             this.pushNuget('*.nuspec')
         }else{
             // msbuild took care of packing, which means the nuspec seats next to the built dll
-            var src_path = path.dirname($this.solution)
+            var src_path = path.dirname(this.solution)
             core.info(`Your solution seats in ${src_path}. Trying to push now.`)
             this.pushNuget(`${src_path}\\bin\\Release\\*.nuspec`)
         }
