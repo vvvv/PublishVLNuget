@@ -4,9 +4,9 @@ description: Publishes a VL nuget
 inputs:
   nuspec:
     description: The path to your .nuspec file
-    required: true
+    required: false
   solution:
-    description: A path to your Visual Studio solution, if the project has any
+    description: A path to your csproj file, if the project has any
     required: false
   icon-src:
     description: An external URL for your nuget's icon, if the repo does not already have one
@@ -14,12 +14,6 @@ inputs:
   icon-dst:
     description: If you set an external icon source, this should be the full path to the icon, as expected by your nuspec
     required: false
-  version:
-    description: Your package's version. Must be valid semver. If not set, the version specified in your nuspec will be used
-    required: false
-  auto-patch-number:
-    description : If true, automatically increment version patch number at each push. Otherwise, uses the input one
-    default: false
   nuget-key:
     description: Nuget API Key
     required: true
