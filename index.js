@@ -2,15 +2,14 @@ const core = require('@actions/core');
 const semver = require('semver')
 const spawnSync = require('child_process').spawnSync
 const existsSync = require("fs").existsSync
+const path = require('path')
 
 class Action{
     constructor(){
-        this.nuspec = core.getInput('nuspec', { required: true })
+        this.nuspec = core.getInput('nuspec')
         this.solution = core.getInput('solution')
         this.icon_src = core.getInput('icon-src')
         this.icon_dst = core.getInput('icon-dst')
-        this.version = core.getInput('version')
-        this.auto_increment_patch = core.getInput('auto-patch-number')
         this.nuget_key = core.getInput('nuget-key')
         this.nuget_feed = core.getInput('nuget-feed')
         this.use_symbols = core.getInput('use-symbols')
@@ -42,7 +41,7 @@ class Action{
 
     fileExists(path){
         return existsSync(path)
-      }
+    }
 
     // Builds a vs solution
     buildSolution(){
@@ -66,41 +65,29 @@ class Action{
 
     // Packs the nuget
     packNuget(){
-        if(this.version){
-            var sem = semver.parse(this.version)
-            if(sem == null){
-                core.error('The version you provided cannot be parsed to semver, please advise')
-                core.setFailed('Please provide a valid semver version')
-            }
-            else{
-                if(this.auto_increment_patch == 'true'){
-                    // increment patch number
-                }
-                var packCommand = this.executeCommand(`nuget pack ${this.nuspec} -Version ${sem.version}`)
-                this.printCommandOutput(packCommand)
-            }
-        }
-        else{
-            // pack with nuspec version
-            var packCommand = this.executeCommand(`nuget pack ${this.nuspec}`)
-            this.printCommandOutput(packCommand)
-        }
+        var packCommand = this.executeCommand(`nuget pack ${this.nuspec}`)
+        this.printCommandOutput(packCommand)
     }
 
     // Pushes the nuget
-    pushNuget(){
+    pushNuget(nupkg_path){
         if(this.use_symbols == 'true'){
-            var pushCommand = this.executeCommand(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed}`)
+            var pushCommand = this.executeCommand(`nuget push ${nupkg_path} ${this.nuget_key} -src ${this.nuget_feed}`)
             this.printCommandOutput(pushCommand)
         }else{
-            var pushCommand = this.executeCommand(`nuget push *.nupkg ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
+            var pushCommand = this.executeCommand(`nuget push ${nupkg_path} ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
             this.printCommandOutput(pushCommand)
         }
     }
 
     // Runs the job
     run(){
-        // Build VS solution
+        // Check nonsense inputs
+        if(!this.nuspec && !this.solution){
+            core.setFailed('You did not provide a nuspec or a VS solution, I have nothing to pack here...')
+        }
+
+        // Build solution
         if(this.solution){
             this.buildSolution()
         }else{
@@ -114,13 +101,27 @@ class Action{
             core.info('You did not specify any remote icon, moving to next step')
         }
 
-        // Pack nuget
-        this.packNuget()
-
-        // Push nuget
-        this.pushNuget()
+        // Pack the nuget
+        // We only pack the nuget manually if the user has provided his own nuspec file
+        // Otherwise, it means msbuild already took care of that
+        if(this.nuspec){
+            this.packNuget()
+        }else{
+            core.info('You did not provide any nuspec file, I\'m assuming msbuild created one. Moving on.')
+        }
+        
+        // Push the nuget
+        if(this.nuspec){
+            // The user specificied a nuspec, which means it was packed at the root of the repo
+            this.pushNuget('*.nuspec')
+        }else{
+            // msbuild took care of packing, which means the nuspec seats next to the built dll
+            var src_path = path.dirname($this.solution)
+            core.info(`Your solution seats in ${src_path}. Trying to push now.`)
+            this.pushNuget(`${src_path}\\bin\\Release\\*.nuspec`)
+        }
+        
     }
-    
 }
 
 new Action().run()
