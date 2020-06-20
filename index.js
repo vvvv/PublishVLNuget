@@ -44,8 +44,13 @@ class Action{
     }
 
     // Builds a vs solution
-    buildSolution(){
-        var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+    buildSolution(do_pack){
+        if(do_pack){
+            var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release /t:Pack`)
+        }else{
+            var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+        }
+        
         this.printCommandOutput(buildCommand)
     }
 
@@ -96,7 +101,11 @@ class Action{
 
         // Build solution
         if(this.solution){
-            this.buildSolution()
+            if(!this.nuspec){
+                this.buildSolution(true)
+            }else{
+                this.buildSolution(false)
+            }
         }else{
             core.info('Your nuget does not have a VS solution, moving to next step')
         }
