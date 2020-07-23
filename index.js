@@ -1,5 +1,4 @@
 const core = require('@actions/core');
-const semver = require('semver')
 const spawnSync = require('child_process').spawnSync
 const existsSync = require("fs").existsSync
 const path = require('path')
@@ -7,7 +6,7 @@ const path = require('path')
 class Action{
     constructor(){
         this.nuspec = core.getInput('nuspec')
-        this.solution = core.getInput('solution')
+        this.csproj = core.getInput('csproj')
         this.icon_src = core.getInput('icon-src')
         this.icon_dst = core.getInput('icon-dst')
         this.nuget_key = core.getInput('nuget-key')
@@ -46,9 +45,9 @@ class Action{
     // Builds a vs solution
     buildSolution(do_pack){
         if(do_pack){
-            var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release /t:Pack`)
+            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release /t:Pack`)
         }else{
-            var buildCommand = this.executeCommand(`msbuild ${this.solution} /t:Build /v:m /m /restore /p:Configuration=Release`)
+            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release`)
         }
         
         this.printCommandOutput(buildCommand)
@@ -88,8 +87,8 @@ class Action{
     // Runs the job
     run(){
         // Check nonsense inputs
-        if(!this.nuspec && !this.solution){
-            core.setFailed('You did not provide a nuspec or a VS solution, I have nothing to pack here...')
+        if(!this.nuspec && !this.csproj){
+            core.setFailed('You did not provide a nuspec or a csproj  file, I have nothing to pack here...')
         }
 
         // Retrieve icon
@@ -100,7 +99,7 @@ class Action{
         }
 
         // Build solution
-        if(this.solution){
+        if(this.csproj){
             if(!this.nuspec){
                 this.buildSolution(true)
             }else{
@@ -125,7 +124,7 @@ class Action{
             this.pushNuget('*.nupkg')
         }else{
             // msbuild took care of packing, which means the nuspec seats next to the built dll
-            var src_path = path.dirname(this.solution)
+            var src_path = path.dirname(this.csproj)
             this.pushNuget(`${src_path}\\bin\\Release\\*.nupkg`)
         }
         

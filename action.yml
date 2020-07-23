@@ -5,7 +5,7 @@ inputs:
   nuspec:
     description: The path to your .nuspec file
     required: false
-  solution:
+  csproj:
     description: A path to your csproj file, if the project has any
     required: false
   icon-src:
