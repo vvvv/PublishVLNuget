@@ -12,7 +12,7 @@ The following inputs can be used
 | Input              | Description                                                                                                                                     |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
 | nuspec             | Optional. The path to the `.nuspec` file.                                                                                                       |
-| solution           | Optional. A path to a `csproj` file, if the project has any.                                                                                    |
+| csproj             | Optional. A path to a `csproj` file, if the project has any.                                                                                    |
 | icon-src           | Optional. An exteral source (url) for your nuget's icon, if the repo does not already have one.                                                 |
 | icon-dst           | Mandatory if _Icon Src_ is set. Useless otherwise. The icon's full path, as expected in your nuspec file.                                       |
 | nuget-key          | Optional. Your secret API key to publish your package                                                                                           |
