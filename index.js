@@ -46,7 +46,7 @@ class Action{
     buildSolution(do_pack){
         if(do_pack){
             // Builds the solution and packs the nuget. Package will go next to csproj
-            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release /t:Pack /p:PackageOutputPath="./"`)
+            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release /t:Pack /p:PackageOutputPath=".\\"`)
         }else{
             // Just builds the solution, packing is handled by the nuspec
             var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release`)
