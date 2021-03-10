@@ -45,8 +45,10 @@ class Action{
     // Builds a vs solution
     buildSolution(do_pack){
         if(do_pack){
-            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release /t:Pack`)
+            // Builds the solution and packs the nuget. Package will go next to csproj
+            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release /t:Pack /p:PackageOutputPath=${path.dirname(this.csproj)}`)
         }else{
+            // Just builds the solution, packing is handled by the nuspec
             var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release`)
         }
         
@@ -123,9 +125,9 @@ class Action{
             // The user specificied a nuspec, which means it was packed at the root of the repo
             this.pushNuget('*.nupkg')
         }else{
-            // msbuild took care of packing, which means the nuspec seats next to the built dll
+            // msbuild took care of packing, which means the nupkg seats next to the csproj
             var src_path = path.dirname(this.csproj)
-            this.pushNuget(`${src_path}\\bin\\Release\\*.nupkg`)
+            this.pushNuget(`${src_path}\\*.nupkg`)
         }
         
     }
