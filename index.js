@@ -126,8 +126,7 @@ class Action{
             this.pushNuget('*.nupkg')
         }else{
             // msbuild took care of packing, which means the nupkg seats next to the csproj
-            var src_path = path.dirname(this.csproj)
-            this.pushNuget('.\\' + src_path + '\\*.nupkg')
+            this.pushNuget('.\\**\\*.nupkg')
         }
         
     }
