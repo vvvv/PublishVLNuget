@@ -25,6 +25,9 @@ inputs:
     description: Allows to explicitely use symbols when packing the nuget.
     required: false
     default: false
+  version:
+    description: If set, this version will be used when pushing the nuget, overriding nuspec or csproj
+    required: false
 
 runs:
   using: 'node12'

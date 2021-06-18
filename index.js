@@ -12,6 +12,7 @@ class Action{
         this.nuget_key = core.getInput('nuget-key')
         this.nuget_feed = core.getInput('nuget-feed')
         this.use_symbols = core.getInput('use-symbols')
+        this.version = core.getInput('version')
     }
 
     // Executes a blocking command
@@ -71,7 +72,14 @@ class Action{
 
     // Packs the nuget
     packNuget(){
-        var packCommand = this.executeCommand(`nuget pack ${this.nuspec}`)
+        if(!this.version){
+            // User did not specify version, we use the one in nuspec
+            var packCommand = this.executeCommand(`nuget pack ${this.nuspec}`)
+        }else{
+            // User did specify a version, let's pack with it
+            var packCommand = this.executeCommand(`nuget pack ${this.nuspec} -Version ${this.version}`)
+        }
+        
         this.printCommandOutput(packCommand)
     }
 
@@ -122,10 +130,8 @@ class Action{
         
         // Push the nuget
         if(this.nuspec){
-            // The user specificied a nuspec, which means it was packed at the root of the repo
             this.pushNuget('*.nupkg')
         }else{
-            // msbuild took care of packing, which means the nupkg seats next to the csproj
             this.pushNuget('.\\**\\*.nupkg')
         }
         

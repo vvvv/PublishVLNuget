@@ -64,10 +64,12 @@ The following inputs can be used
 | nuget-key          | Optional. Your secret API key to publish your package                                                                                           |
 | nuget-feed         | Optional. Sets the nuget feed to publish the nuget. Uses nuget.org's feed by default                                                            |
 | use-symbols        | Optional. Allows to explicitly use symbols when packing the nuget. Defaults to `False`.                                                         |
+| version            | Optional. If set, allows to override the version set in the nuspec file. Does not apply if packing with csproj, and must be valid semver                                                                                                                                                                 |
 
 - If you specify a `.nuspec` file, its version, dependencies and files will be taken into account
 - If you don't specify a `.nuspec`, we assume this information is set in your `.csproj` file
 - If you specify both, the `.nuspec` wins
+- If you specify a version `
 
 ## Notes
 
