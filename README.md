@@ -28,7 +28,7 @@ jobs:
       uses: nuget/setup-nuget@v1
       
     - name: Publish VL Nuget
-      uses: vvvv/PublishVLNuget@1.0.41
+      uses: vvvv/PublishVLNuget@1.0.42
       with:
         csproj: your\file.csproj
         nuspec: yyy\YourPlugin.nuspec
