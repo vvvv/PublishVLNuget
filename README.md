@@ -22,13 +22,13 @@ jobs:
       uses: actions/checkout@master
     
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v1.3.1
 
     - name: Setup Nuget.exe
       uses: nuget/setup-nuget@v1
       
     - name: Publish VL Nuget
-      uses: vvvv/PublishVLNuget@1.0.42
+      uses: vvvv/PublishVLNuget@1.0.43
       with:
         csproj: your\file.csproj
         nuspec: yyy\YourPlugin.nuspec
