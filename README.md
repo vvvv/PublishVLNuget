@@ -69,7 +69,7 @@ The following inputs can be used
 - If you specify a `.nuspec` file, its version, dependencies and files will be taken into account
 - If you don't specify a `.nuspec`, we assume this information is set in your `.csproj` file
 - If you specify both, the `.nuspec` wins
-- If you specify a version `
+- If you specify a version, it will override the one from your nuspec. Only taken into account if using a `.nuspec`
 
 ## Notes
 
