@@ -86,10 +86,10 @@ class Action{
     // Pushes the nuget
     pushNuget(nupkg_path){
         if(this.use_symbols == 'true'){
-            var pushCommand = this.executeCommand(`nuget push ${nupkg_path} ${this.nuget_key} -src ${this.nuget_feed}`)
+            var pushCommand = this.executeCommand(`nuget push ${nupkg_path} ${this.nuget_key} -src ${this.nuget_feed} -SkipDuplicate`)
             this.printCommandOutput(pushCommand)
         }else{
-            var pushCommand = this.executeCommand(`nuget push ${nupkg_path} ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols`)
+            var pushCommand = this.executeCommand(`nuget push ${nupkg_path} ${this.nuget_key} -src ${this.nuget_feed} -NoSymbols -SkipDuplicate`)
             this.printCommandOutput(pushCommand)
         }
     }
