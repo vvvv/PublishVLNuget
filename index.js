@@ -7,6 +7,8 @@ class Action{
     constructor(){
         this.nuspec = core.getInput('nuspec')
         this.csproj = core.getInput('csproj')
+        // Check if csproj is assigned. If it is, create an array with invidual entries or return an empty array
+        this.csprojs = this.csproj ? this.csproj.split(/[,\n]+/).map(p => p.trim()).filter(Boolean) : []
         this.icon_src = core.getInput('icon-src')
         this.icon_dst = core.getInput('icon-dst')
         this.nuget_key = core.getInput('nuget-key')
@@ -44,16 +46,21 @@ class Action{
     }
 
     // Builds a vs solution
-    buildSolution(do_pack){
-        if(do_pack){
-            // Builds the solution and packs the nuget. Package will go next to csproj
-            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release /p:PackageOutputPath=./ /t:Pack`)
-        }else{
-            // Just builds the solution, packing is handled by the nuspec
-            var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release`)
-        }
+    buildSolutions(do_pack){
+        // Iterate over all csproj and build them
+        for(const csproj of this.csprojs){
+            console.log('Building project: ${csproj}')
+            if(do_pack){
+                // Builds the solution and packs the nuget. Package will go next to csproj
+                var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release /p:PackageOutputPath=./ /t:Pack`)
+            }else{
+                // Just builds the solution, packing is handled by the nuspec
+                var buildCommand = this.executeCommand(`msbuild ${this.csproj} /t:Build /v:m /m /restore /p:Configuration=Release`)
+            }
         
-        this.printCommandOutput(buildCommand)
+            this.printCommandOutput(buildCommand)
+        }
+
     }
 
     // Downloads an icon
@@ -109,14 +116,14 @@ class Action{
         }
 
         // Build solution
-        if(this.csproj){
+        if(this.csprojs.length > 0){
             if(!this.nuspec){
-                this.buildSolution(true)
+                this.buildSolutions(true)
             }else{
-                this.buildSolution(false)
+                this.buildSolutions(false)
             }
         }else{
-            core.info('Your nuget does not have a VS solution, moving to next step')
+            core.info('No csproj files specified, moving to next step')
         }
 
         // Pack the nuget

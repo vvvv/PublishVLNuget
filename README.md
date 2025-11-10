@@ -28,7 +28,7 @@ jobs:
       uses: nuget/setup-nuget@v1
       
     - name: Publish VL Nuget
-      uses: vvvv/PublishVLNuget@1.0.43
+      uses: vvvv/PublishVLNuget@1.0.44
       with:
         csproj: your\file.csproj
         nuspec: yyy\YourPlugin.nuspec
@@ -43,13 +43,26 @@ If your project has no solution and no external icon, simply use
 [...]
 
     - name: Publish VL Nuget
-      uses: vvvv/PublishVLNuget@1.0.29
+      uses: vvvv/PublishVLNuget@1.0.45
       with:
         nuspec: yyy\YourPlugin.nuspec
         nuget-key: ${{ secrets.YOUR_NUGET_KEY }}
 ```
 
 and remove the `Setup MSBuild.exe` step.
+
+If your project contains multiple `csproj`, you can specify them in a comma separated list
+
+```
+[...]
+
+    - name: Publish VL Nuget
+      uses: vvvv/PublishVLNuget@1.0.45
+      with:
+        nuspec: yyy\YourPlugin.nuspec
+        nuget-key: ${{ secrets.YOUR_NUGET_KEY }}
+        csproj: 'your\first\file.csproj,your\second\file.csproj'
+```
 
 ## Inputs
 
@@ -58,7 +71,7 @@ The following inputs can be used
 | Input              | Description                                                                                                                                     |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
 | nuspec             | Optional. The path to the `.nuspec` file.                                                                                                       |
-| csproj             | Optional. A path to a `csproj` file, if the project has any.                                                                                    |
+| csproj             | Optional. A comma-separated list of csproj, if the project has any.                                                                             |
 | icon-src           | Optional. An exteral source (url) for your nuget's icon, if the repo does not already have one.                                                 |
 | icon-dst           | Mandatory if _icon_src_ is set. Useless otherwise. The icon's full path, as expected in your nuspec file.                                       |
 | nuget-key          | Optional. Your secret API key to publish your package                                                                                           |

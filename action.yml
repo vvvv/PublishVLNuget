@@ -6,7 +6,7 @@ inputs:
     description: The path to your .nuspec file
     required: false
   csproj:
-    description: A path to your csproj file, if the project has any
+    description: A comma separated list of csproj to build
     required: false
   icon-src:
     description: An external URL for your nuget's icon, if the repo does not already have one
@@ -22,7 +22,7 @@ inputs:
     required: false
     default: 'https://api.nuget.org/v3/index.json'
   use-symbols:
-    description: Allows to explicitely use symbols when packing the nuget.
+    description: Allows to explicitly use symbols when packing the nuget.
     required: false
     default: false
   version:
