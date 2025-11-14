@@ -28,7 +28,7 @@ jobs:
       uses: nuget/setup-nuget@v1
       
     - name: Publish VL Nuget
-      uses: vvvv/PublishVLNuget@1.0.44
+      uses: vvvv/PublishVLNuget@1.0.46
       with:
         csproj: your\file.csproj
         nuspec: yyy\YourPlugin.nuspec
@@ -43,7 +43,7 @@ If your project has no solution and no external icon, simply use
 [...]
 
     - name: Publish VL Nuget
-      uses: vvvv/PublishVLNuget@1.0.45
+      uses: vvvv/PublishVLNuget@1.0.46
       with:
         nuspec: yyy\YourPlugin.nuspec
         nuget-key: ${{ secrets.YOUR_NUGET_KEY }}
@@ -57,7 +57,7 @@ If your project contains multiple `csproj`, you can specify them in a comma sepa
 [...]
 
     - name: Publish VL Nuget
-      uses: vvvv/PublishVLNuget@1.0.45
+      uses: vvvv/PublishVLNuget@1.0.46
       with:
         nuspec: yyy\YourPlugin.nuspec
         nuget-key: ${{ secrets.YOUR_NUGET_KEY }}
